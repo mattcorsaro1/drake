@@ -297,6 +297,15 @@ drake_lcm_cc_library(
 )
 
 drake_lcm_cc_library(
+    name = "robotiq_3f",
+    lcm_package = "drake",
+    lcm_srcs = [
+        "lcmt_robotiq_3f_command.lcm",
+        "lcmt_robotiq_3f_status.lcm",
+    ],
+)
+
+drake_lcm_cc_library(
     name = "schunk",
     lcm_package = "drake",
     lcm_srcs = [
