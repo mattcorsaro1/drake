@@ -78,13 +78,9 @@ void DoMain() {
   parser.AddModelFromFile(hand_model_path);
   parser.AddModelFromFile(object_model_path);
 
-  // Create a transform representing the desired initial hand rotation
-  Eigen::Matrix3d hand_pose;
-  hand_pose << 0, -1, 0,
-               0, 0, -1,
-               1, 0, 0;
-  math::RotationMatrix hand_pose_rotmat(hand_pose);
-  RigidTransformd hand_rigid_tf(hand_pose_rotmat);
+  // Create a transform representing the desired initial hand pose
+  RigidTransformd hand_rigid_tf(RollPitchYawd(0, M_PI/2, -1*M_PI/2),
+                                Eigen::Vector3d(0, 0, 0));
 
   // Weld the hand to the world frame
   const auto& joint_palm = plant.GetBodyByName("palm");
@@ -186,9 +182,7 @@ void DoMain() {
       plant.EvalBodyPoseInWorld(plant_context, hand).translation();
   RigidTransformd X_WM(
       RollPitchYawd(M_PI / 2, 0, 0),
-      // For now, send the mug above the hand so we can resolve controller
-      // issues.
-      p_WHand + Eigen::Vector3d(0.095, 0.062, 0.095+1.0));
+      p_WHand + Eigen::Vector3d(0.2, 0.062, 0));
   plant.SetFreeBodyPose(&plant_context, mug, X_WM);
 
   // Set up simulator.
