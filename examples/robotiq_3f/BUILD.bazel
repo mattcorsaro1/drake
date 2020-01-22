@@ -35,6 +35,33 @@ drake_cc_library(
 )
 
 drake_cc_binary(
+    name = "robotiq_3f_simple_demo",
+    srcs = ["robotiq_3f_simple_demo.cc"],
+    data = [
+        "//manipulation/models/robotiq_3f_description:models",
+    ],
+    deps = [
+        "//common:add_text_logging_gflags",
+        "//common:find_resource",
+        "//examples/robotiq_3f:robotiq_3f_common",
+        "//examples/robotiq_3f:robotiq_3f_lcm",
+        "//geometry:geometry_visualization",
+        "//lcm",
+        "//lcmtypes:robotiq_3f",
+        "//math",
+        "//multibody/parsing",
+        "//multibody/plant",
+        "//multibody/plant:contact_results_to_lcm",
+        "//systems/analysis",
+        "//systems/controllers:pid_controller",
+        "//systems/lcm:lcm_pubsub_system",
+        "//systems/primitives",
+        "//systems/rendering:pose_bundle_to_draw_message",
+        "@gflags",
+    ],
+)
+
+drake_cc_binary(
     name = "run_robotiq_3f_constant_load_demo",
     srcs = ["run_robotiq_3f_constant_load_demo.cc"],
     data = [
