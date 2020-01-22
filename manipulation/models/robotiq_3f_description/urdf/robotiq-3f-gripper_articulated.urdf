@@ -135,6 +135,11 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <origin rpy="0 0 0" xyz="0.020 0 0"/>
     <limit effort="100" lower="0" upper="1.2217304764" velocity="100"/>
   </joint>
+  <transmission name="finger_1_transmission_1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_1_joint_1"/>
+    <actuator name="finger_1_actuator_1"/>
+  </transmission>
   <joint name="finger_1_joint_2" type="revolute">
     <parent link="finger_1_link_1"/>
     <child link="finger_1_link_2"/>
@@ -142,6 +147,11 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <origin rpy="0 0 -0.52" xyz="0.050 -.028 0"/>
     <limit effort="100" lower="0" upper="1.57079632679" velocity="100"/>
   </joint>
+  <transmission name="finger_1_transmission_2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_1_joint_2"/>
+    <actuator name="finger_1_actuator_2"/>
+  </transmission>
   <joint name="finger_1_joint_3" type="revolute">
     <parent link="finger_1_link_2"/>
     <child link="finger_1_link_3"/>
@@ -149,6 +159,11 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <origin rpy="0 0 0" xyz="0.039 0 0"/>
     <limit effort="100" lower="-1.2217304764" upper="-0.0523598775598" velocity="100"/>
   </joint>
+  <transmission name="finger_1_transmission_3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_1_joint_3"/>
+    <actuator name="finger_1_actuator_3"/>
+  </transmission>
   <link name="finger_2_link_0">
     <visual>
       <origin rpy="0 0 0" xyz="0.020 0 0"/>
@@ -276,6 +291,11 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <origin rpy="0 0 0" xyz="0.020 0 0"/>
     <limit effort="100" lower="0" upper="1.2217304764" velocity="100"/>
   </joint>
+  <transmission name="finger_2_transmission_1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_2_joint_1"/>
+    <actuator name="finger_2_actuator_1"/>
+  </transmission>
   <joint name="finger_2_joint_2" type="revolute">
     <parent link="finger_2_link_1"/>
     <child link="finger_2_link_2"/>
@@ -283,6 +303,11 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <origin rpy="0 0 -0.52" xyz="0.050 -.028 0"/>
     <limit effort="100" lower="0" upper="1.57079632679" velocity="100"/>
   </joint>
+  <transmission name="finger_2_transmission_2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_2_joint_2"/>
+    <actuator name="finger_2_actuator_2"/>
+  </transmission>
   <joint name="finger_2_joint_3" type="revolute">
     <parent link="finger_2_link_2"/>
     <child link="finger_2_link_3"/>
@@ -290,6 +315,11 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <origin rpy="0 0 0" xyz="0.039 0 0"/>
     <limit effort="100" lower="-1.2217304764" upper="-0.0523598775598" velocity="100"/>
   </joint>
+  <transmission name="finger_2_transmission_3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_2_joint_3"/>
+    <actuator name="finger_2_actuator_3"/>
+  </transmission>
   <link name="finger_middle_link_0">
     <visual>
       <origin rpy="0 0 0" xyz="0.020 0 0"/>
@@ -417,6 +447,11 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <origin rpy="0 0 0" xyz="0.020 0 0"/>
     <limit effort="100" lower="0" upper="1.2217304764" velocity="100"/>
   </joint>
+  <transmission name="finger_middle_transmission_1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_middle_joint_1"/>
+    <actuator name="finger_middle_actuator_1"/>
+  </transmission>
   <joint name="finger_middle_joint_2" type="revolute">
     <parent link="finger_middle_link_1"/>
     <child link="finger_middle_link_2"/>
@@ -424,6 +459,11 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <origin rpy="0 0 -0.52" xyz="0.050 -.028 0"/>
     <limit effort="100" lower="0" upper="1.57079632679" velocity="100"/>
   </joint>
+  <transmission name="finger_middle_transmission_2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_middle_joint_2"/>
+    <actuator name="finger_middle_actuator_2"/>
+  </transmission>
   <joint name="finger_middle_joint_3" type="revolute">
     <parent link="finger_middle_link_2"/>
     <child link="finger_middle_link_3"/>
@@ -431,6 +471,11 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <origin rpy="0 0 0" xyz="0.039 0 0"/>
     <limit effort="100" lower="-1.2217304764" upper="-0.0523598775598" velocity="100"/>
   </joint>
+  <transmission name="finger_middle_transmission_3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_middle_joint_3"/>
+    <actuator name="finger_middle_actuator_3"/>
+  </transmission>
   <link name="palm">
     <visual>
       <geometry>
@@ -470,6 +515,11 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <origin rpy="0 3.1416 -1.57" xyz="-0.0455 0.0214 0.036"/>
     <limit effort="100" lower="-0.16" upper="0.25" velocity="100"/>
   </joint>
+  <transmission name="palm_finger_1_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="palm_finger_1_joint"/>
+    <actuator name="palm_finger_1_actuator"/>
+  </transmission>
   <joint name="palm_finger_2_joint" type="revolute">
     <parent link="palm"/>
     <child link="finger_2_link_0"/>
@@ -477,6 +527,11 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <origin rpy="0 3.1416 -1.57" xyz="-0.0455 0.0214 -0.036"/>
     <limit effort="100" lower="-0.25" upper="0.16" velocity="100"/>
   </joint>
+  <transmission name="palm_finger_2_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="palm_finger_2_joint"/>
+    <actuator name="palm_finger_2_actuator"/>
+  </transmission>
   <joint name="palm_finger_middle_joint" type="fixed">
     <parent link="palm"/>
     <child link="finger_middle_link_0"/>
