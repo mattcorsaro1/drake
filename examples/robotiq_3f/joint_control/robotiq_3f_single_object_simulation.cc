@@ -70,7 +70,7 @@ void DoMain() {
   plant.RegisterAsSourceForSceneGraph(&scene_graph);
   std::string hand_model_path = FindResourceOrThrow(
         "drake/manipulation/models/"
-        "robotiq_3f_description/sdf/robotiq-3f-gripper_articulated.sdf");
+        "robotiq_3f_description/urdf/robotiq-3f-gripper_articulated.urdf");
 
   const std::string object_model_path = FindResourceOrThrow(
       "drake/examples/robotiq_3f/joint_control/simple_mug.sdf");

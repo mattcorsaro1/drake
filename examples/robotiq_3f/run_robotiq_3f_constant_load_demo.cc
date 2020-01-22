@@ -62,7 +62,7 @@ void DoMain() {
                                   (FLAGS_max_time_step);
   plant.RegisterAsSourceForSceneGraph(&scene_graph);
   std::string full_name = FindResourceOrThrow("drake/manipulation/models/"
-        "robotiq_3f_description/sdf/robotiq-3f-gripper_articulated.sdf");
+        "robotiq_3f_description/urdf/robotiq-3f-gripper_articulated.urdf");
 
   multibody::Parser(&plant).AddModelFromFile(full_name);
 
