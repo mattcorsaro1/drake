@@ -11,14 +11,27 @@
     link_2: 60.1g
     link_3: 24g
 
-    assuming link_1 and link_2 have the same density, using the volumes of
-    the visual meshes computed in MeshLab
-    (link_1: 6.8207e-5 m^3, link_2: 3.9083e-5),
-    density = m/V = 0.0601/3.9083e-5 = 1537.8 kg/m^3.
-    Therefore, the mass of link_1 is approximately
-    m = dV = 1537.8*6.8207e-5 = 0.10489 kg and the mass of link_0 is 
-    0.12622-0.10489 = 0.02133 kg
+  assuming link_1 and link_2 have the same density, using the volumes of
+  the visual meshes computed in MeshLab
+  (link_1: 6.8207e-5 m^3, link_2: 3.9083e-5),
+  density = m/V = 0.0601/3.9083e-5 = 1537.8 kg/m^3.
+  Therefore, the mass of link_1 is approximately
+  m = dV = 1537.8*6.8207e-5 = 0.10489 kg and the mass of link_0 is 
+  0.12622-0.10489 = 0.02133 kg
 -->
+
+<!--
+  Inertial properties of links estimated using visual meshes and Gazebo's
+  [inertial estimation tutorial](http://gazebosim.org/tutorials?tut=inertia).
+  Each visual mesh was loaded in MeshLab, then scaled up by a factor of 10
+  in each dimension as instructed by the tutorial to increase precision.
+  After computing geometric measures, the resulting inertia values are divided
+  by 10^5.
+  MeshLab uses the mesh's computed volume as the mass because density=1. Each
+  inertia value should be multiplied by the corresponding link's actual mass
+  and divided by its volume (the reported scaled-up volume divided by 10^3).
+-->
+
 <!-- 
 robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-gripper,
 3 fingered gripper.                                                
@@ -46,7 +59,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.02133"/>
-      <inertia ixx="9.98e-9" ixy="4.8e-10" ixz="0.0" iyy="9.64e-9" iyz="0.0" izz="1.282e-8"/>
+      <inertia ixx="4.598e-06" ixy="2.211e-07" ixz="0.0" iyy="4.441e-06" iyz="0.0" izz="5.906e-06"/>
     </inertial>
   </link>
   <link name="finger_1_link_1">
@@ -76,7 +89,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.10489"/>
-      <inertia ixx= "1.076e-8" ixy= "-3.8e-10" ixz="0.0" iyy= "4.769e-8" iyz="0.0" izz= "5.237e-8"/>
+      <inertia ixx="1.655e-05" ixy="-5.844e-07" ixz="0.0" iyy="7.334e-05" iyz="0.0" izz="8.054e-05"/>
     </inertial>
   </link>
   <link name="finger_1_link_2">
@@ -111,7 +124,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.0601"/>
-      <inertia ixx="4.75e-9" ixy="-1.72e-9" ixz="2.3e-10" iyy="1.247e-8" iyz="4.5e-10" izz="1.44e-8"/>
+      <inertia ixx="7.304e-06" ixy="-2.645e-06" ixz="3.537e-07" iyy="1.918e-05" iyz="6.920e-07" izz="2.214e-05"/>
     </inertial>
   </link>
   <link name="finger_1_link_3">
@@ -141,7 +154,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.024"/>
-      <inertia ixx="1.96e-9" ixy="-7.5e-10" ixz="-1e-11" iyy="4.76e-9" iyz="0.0" izz="4.44e-9"/>
+      <inertia ixx="2.021e-06" ixy="-7.733e-07" ixz="-1.031e-08" iyy="4.908e-06" iyz="0.0" izz="4.578e-06"/>
     </inertial>
   </link>
   <joint name="finger_1_joint_1" type="revolute">
@@ -202,7 +215,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.02133"/>
-      <inertia ixx="9.98e-9" ixy="4.8e-10" ixz="0.0" iyy="9.64e-9" iyz="0.0" izz="1.282e-8"/>
+      <inertia ixx="4.598e-06" ixy="2.211e-07" ixz="0.0" iyy="4.441e-06" iyz="0.0" izz="5.906e-06"/>
     </inertial>
   </link>
   <link name="finger_2_link_1">
@@ -232,7 +245,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.10489"/>
-      <inertia ixx= "1.076e-8" ixy= "-3.8e-10" ixz="0.0" iyy= "4.769e-8" iyz="0.0" izz= "5.237e-8"/>
+      <inertia ixx="1.655e-05" ixy="-5.844e-07" ixz="0.0" iyy="7.334e-05" iyz="0.0" izz="8.054e-05"/>
     </inertial>
   </link>
   <link name="finger_2_link_2">
@@ -267,7 +280,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.0601"/>
-      <inertia ixx="4.75e-9" ixy="-1.72e-9" ixz="2.3e-10" iyy="1.247e-8" iyz="4.5e-10" izz="1.44e-8"/>
+      <inertia ixx="7.304e-06" ixy="-2.645e-06" ixz="3.537e-07" iyy="1.918e-05" iyz="6.920e-07" izz="2.214e-05"/>
     </inertial>
   </link>
   <link name="finger_2_link_3">
@@ -297,7 +310,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.024"/>
-      <inertia ixx="1.96e-9" ixy="-7.5e-10" ixz="-1e-11" iyy="4.76e-9" iyz="0.0" izz="4.44e-9"/>
+      <inertia ixx="2.021e-06" ixy="-7.733e-07" ixz="-1.031e-08" iyy="4.908e-06" iyz="0.0" izz="4.578e-06"/>
     </inertial>
   </link>
   <joint name="finger_2_joint_1" type="revolute">
@@ -358,7 +371,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.02133"/>
-      <inertia ixx="9.98e-9" ixy="4.8e-10" ixz="0.0" iyy="9.64e-9" iyz="0.0" izz="1.282e-8"/>
+      <inertia ixx="4.598e-06" ixy="2.211e-07" ixz="0.0" iyy="4.441e-06" iyz="0.0" izz="5.906e-06"/>
     </inertial>
   </link>
   <link name="finger_middle_link_1">
@@ -388,7 +401,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.10489"/>
-      <inertia ixx= "1.076e-8" ixy= "-3.8e-10" ixz="0.0" iyy= "4.769e-8" iyz="0.0" izz= "5.237e-8"/>
+      <inertia ixx="1.655e-05" ixy="-5.844e-07" ixz="0.0" iyy="7.334e-05" iyz="0.0" izz="8.054e-05"/>
     </inertial>
   </link>
   <link name="finger_middle_link_2">
@@ -423,7 +436,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.0601"/>
-      <inertia ixx="4.75e-9" ixy="-1.72e-9" ixz="2.3e-10" iyy="1.247e-8" iyz="4.5e-10" izz="1.44e-8"/>
+      <inertia ixx="7.304e-06" ixy="-2.645e-06" ixz="3.537e-07" iyy="1.918e-05" iyz="6.920e-07" izz="2.214e-05"/>
     </inertial>
   </link>
   <link name="finger_middle_link_3">
@@ -453,7 +466,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.024"/>
-      <inertia ixx="1.96e-9" ixy="-7.5e-10" ixz="-1e-11" iyy="4.76e-9" iyz="0.0" izz="4.44e-9"/>
+      <inertia ixx="2.021e-06" ixy="-7.733e-07" ixz="-1.031e-08" iyy="4.908e-06" iyz="0.0" izz="4.578e-06"/>
     </inertial>
   </link>
   <joint name="finger_middle_joint_1" type="revolute">
@@ -522,7 +535,7 @@ robotiq-3f-gripper_articulated - articulated version of the robotiq robotiq-3f-g
   <inertial>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <mass value="1.72568"/>
-    <inertia ixx="1.88879e-6" ixy="6.805e-8" ixz="3e-11" iyy="2.28381e-6" iyz="0.0" izz="1.79801e-6"/>
+    <inertia ixx="2.983e-03" ixy="1.075e-04" ixz="4.738e-08" iyy="3.607e-03" iyz="0.0" izz="2.840e-03"/>
   </inertial>
   <joint name="palm_finger_1_joint" type="revolute">
     <parent link="palm"/>
