@@ -62,13 +62,10 @@ void DoMain() {
   systems::DiagramBuilder<double> builder;
   auto lcm = builder.AddSystem<systems::lcm::LcmInterfaceSystem>();
 
-  geometry::SceneGraph<double>& scene_graph =
-      *builder.AddSystem<geometry::SceneGraph>();
+  auto [plant, scene_graph] = drake::multibody::AddMultibodyPlantSceneGraph(
+    &builder, FLAGS_max_time_step);
   scene_graph.set_name("scene_graph");
 
-  MultibodyPlant<double>& plant =
-      *builder.AddSystem<MultibodyPlant>(FLAGS_max_time_step);
-  plant.RegisterAsSourceForSceneGraph(&scene_graph);
   std::string hand_model_path = FindResourceOrThrow(
         "drake/manipulation/models/"
         "robotiq_3f_description/urdf/robotiq-3f-gripper_articulated.urdf");
@@ -80,12 +77,9 @@ void DoMain() {
                                 Eigen::Vector3d(0, 0, 0));
 
   // Weld the hand to the world frame
-  const auto& joint_palm = plant.GetBodyByName("palm");
-  plant.AddJoint<multibody::WeldJoint>("weld_hand", plant.world_body(),
-                                       std::nullopt,
-                                       joint_palm,
-                                       std::nullopt,
-                                       hand_rigid_tf);
+  plant.WeldFrames(plant.world_frame(),
+                   plant.GetFrameByName("palm"),
+                   hand_rigid_tf);
 
   if (!FLAGS_add_gravity) {
     plant.mutable_gravity_field().set_gravity_vector(
@@ -98,11 +92,6 @@ void DoMain() {
   // Visualization
   geometry::ConnectDrakeVisualizer(&builder, scene_graph);
   DRAKE_DEMAND(!!plant.get_source_id());
-  builder.Connect(
-      plant.get_geometry_poses_output_port(),
-      scene_graph.get_source_pose_port(plant.get_source_id().value()));
-  builder.Connect(scene_graph.get_query_output_port(),
-                  plant.get_geometry_query_input_port());
 
   // Publish contact results for visualization.
   multibody::ConnectContactResultsToDrakeVisualizer(&builder, plant, lcm);
@@ -198,18 +187,26 @@ void DoMain() {
   const multibody::RevoluteJoint<double>& palm_finger_2_joint =
       plant.GetJointByName<multibody::RevoluteJoint>("palm_finger_2_joint");
 
-  const double distal_joint_max = -0.054;
-  finger_middle_joint_1.set_angle(&plant_context, 0.0);
-  finger_middle_joint_2.set_angle(&plant_context, 0.0);
-  finger_middle_joint_3.set_angle(&plant_context, distal_joint_max);
+  finger_middle_joint_1.set_angle(&plant_context,
+    finger_middle_joint_1.position_lower_limit());
+  finger_middle_joint_2.set_angle(&plant_context,
+    finger_middle_joint_2.position_lower_limit());
+  finger_middle_joint_3.set_angle(&plant_context,
+    finger_middle_joint_3.position_upper_limit());
 
-  finger_1_joint_1.set_angle(&plant_context, 0.0);
-  finger_1_joint_2.set_angle(&plant_context, 0.0);
-  finger_1_joint_3.set_angle(&plant_context, distal_joint_max);
+  finger_1_joint_1.set_angle(&plant_context,
+    finger_1_joint_1.position_lower_limit());
+  finger_1_joint_2.set_angle(&plant_context,
+    finger_1_joint_2.position_lower_limit());
+  finger_1_joint_3.set_angle(&plant_context,
+    finger_1_joint_3.position_upper_limit());
 
-  finger_2_joint_1.set_angle(&plant_context, 0.0);
-  finger_2_joint_2.set_angle(&plant_context, 0.0);
-  finger_2_joint_3.set_angle(&plant_context, distal_joint_max);
+  finger_2_joint_1.set_angle(&plant_context,
+    finger_2_joint_1.position_lower_limit());
+  finger_2_joint_2.set_angle(&plant_context,
+    finger_2_joint_2.position_lower_limit());
+  finger_2_joint_3.set_angle(&plant_context,
+    finger_2_joint_3.position_upper_limit());
 
   palm_finger_1_joint.set_angle(&plant_context, 0.0);
   palm_finger_2_joint.set_angle(&plant_context, 0.0);
@@ -224,9 +221,12 @@ void DoMain() {
   // example, so finger_*_link_3's joint is within its limits
   VectorX<double> initial_joint_config =
     VectorX<double>::Zero(plant.num_actuators());
-  initial_joint_config(2) = distal_joint_max;
-  initial_joint_config(5) = distal_joint_max;
-  initial_joint_config(8) = distal_joint_max;
+  initial_joint_config(finger_middle_joint_3.position_start()) =
+    finger_middle_joint_3.position_upper_limit();
+  initial_joint_config(finger_1_joint_3.position_start()) =
+    finger_1_joint_3.position_upper_limit();
+  initial_joint_config(finger_2_joint_3.position_start()) =
+    finger_2_joint_3.position_upper_limit();
 
   // set the initial command for the hand
   hand_command_receiver.set_initial_position(
