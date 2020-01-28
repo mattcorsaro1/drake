@@ -65,7 +65,7 @@ class Robotiq3fCommandReceiver : public systems::LeafSystem<double> {
  private:
   int state_output_port_ = 0;
   int torque_output_port_ = 0;
-  const int num_joints_ = 11;
+  const int num_joints_ = 9;
 };
 
 /// Creates and outputs lcmt_robotiq_3f_status messages.
@@ -115,7 +115,7 @@ class Robotiq3fStatusSender : public systems::LeafSystem<double> {
   int state_input_port_ = 0;
   int command_torque_input_port_ = 0;
 
-  const int num_joints_ = 11;
+  const int num_joints_ = 9;
 };
 
 }  // namespace robotiq_3f

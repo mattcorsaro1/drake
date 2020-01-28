@@ -6,16 +6,15 @@ namespace drake {
 namespace examples {
 namespace robotiq_3f {
 
-const double Robotiq3fHandMotionState::velocity_thresh_ = 0.07;
+const double Robotiq3fHandMotionState::velocity_thresh_ = 7.0;
 
 using drake::multibody::JointIndex;
 using drake::multibody::MultibodyPlant;
 
 void SetPositionControlledGains(Eigen::VectorXd* Kp, Eigen::VectorXd* Ki,
                                 Eigen::VectorXd* Kd) {
-  *Kp = Eigen::VectorXd::Ones(kRobotiq3fNumJoints) * 0.05;
-  *Kd = Eigen::VectorXd::Constant(Kp->size(), 5e-3);
-  (*Kp)[0] = 0.08;
+  *Kp = Eigen::VectorXd::Ones(kRobotiq3fNumJoints) * 0.5;
+  *Kd = Eigen::VectorXd::Constant(Kp->size(), 5e-2);
   *Ki = Eigen::VectorXd::Zero(kRobotiq3fNumJoints);
 }
 
@@ -37,9 +36,11 @@ std::vector<std::string> GetPreferredJointOrdering() {
   joint_name_mapping.push_back("finger_2_joint_2");
   joint_name_mapping.push_back("finger_2_joint_3");
 
+  /*
   // palm - index 3
   joint_name_mapping.push_back("palm_finger_1_joint");
   joint_name_mapping.push_back("palm_finger_2_joint");
+  */
 
   return joint_name_mapping;
 }
@@ -62,9 +63,7 @@ void GetControlPortMapping(
 }
 
 Robotiq3fHandMotionState::Robotiq3fHandMotionState()
-    // TODO(mcorsaro): determine appropriate value for finger_num_. Currently
-    // 3 real fingers plus scissoring mechanisms
-    : finger_num_(4),
+    : finger_num_(3),
       is_joint_stuck_(robotiq_3f_num_joints_),
       is_finger_stuck_(finger_num_) {}
 
@@ -90,12 +89,12 @@ void Robotiq3fHandMotionState::Update(
   if (is_joint_stuck_.segment<3>(0).all()) is_finger_stuck_(0) = true;
   if (is_joint_stuck_.segment<3>(3).all()) is_finger_stuck_(1) = true;
   if (is_joint_stuck_.segment<3>(6).all()) is_finger_stuck_(2) = true;
-  if (is_joint_stuck_.segment<2>(9).all()) is_finger_stuck_(3) = true;
+  //if (is_joint_stuck_.segment<2>(9).all()) is_finger_stuck_(3) = true;
 
   if (motor_reverse.segment<3>(0).any()) is_finger_stuck_(0) = true;
   if (motor_reverse.segment<3>(3).any()) is_finger_stuck_(1) = true;
   if (motor_reverse.segment<3>(6).any()) is_finger_stuck_(2) = true;
-  if (motor_reverse.segment<2>(9).any()) is_finger_stuck_(3) = true;
+  //if (motor_reverse.segment<2>(9).any()) is_finger_stuck_(3) = true;
 }
 
 Eigen::VectorXd Robotiq3fHandMotionState::GraspJointPosition(
@@ -111,33 +110,30 @@ Eigen::VectorXd Robotiq3fHandMotionState::GraspJointPosition(
   if (grasp_mode_index == 0)
     position << 0.478, 0.000, -0.506,
       0.446, 0.000, -0.471,
-      0.495, 0.000, -0.524,
-      0.000, 0.000;
+      0.495, 0.000, -0.524;
   // wide mode
   else if (grasp_mode_index == 1)
     position << 0.487, 0.000, -0.515,
       0.438, 0.000, -0.463,
-      0.495, 0.000, -0.524,
-      0.1766, -0.1766;
+      0.495, 0.000, -0.524;
   // pinch mode
   else if (grasp_mode_index == 2)
     position << 0.462, 0.000, -0.489,
       0.438, 0.000, -0.463,
-      0.495, 0.000, -0.524,
-      -0.1561, 0.1561;
-  position.segment<2>(9) = PalmJointPositionGraspMode(grasp_mode_index);
+      0.495, 0.000, -0.524;
+  //position.segment<2>(9) = PalmJointPositionGraspMode(grasp_mode_index);
   return position;
 }
 
-Eigen::VectorXd Robotiq3fHandMotionState::OpenJointPosition(
-    int grasp_mode_index) const {
+Eigen::VectorXd Robotiq3fHandMotionState::OpenJointPosition() const {
   Eigen::VectorXd position(robotiq_3f_num_joints_);
   // The preset position of the joints when the hand is open.
   position.setZero();
-  position.segment<2>(9) = PalmJointPositionGraspMode(grasp_mode_index);
+  //position.segment<2>(9) = PalmJointPositionGraspMode(grasp_mode_index);
   return position;
 }
 
+/*
 Eigen::Vector2d Robotiq3fHandMotionState::PalmJointPositionGraspMode(
     int grasp_mode_index) const {
   Eigen::Vector2d palm_position;
@@ -154,6 +150,7 @@ Eigen::Vector2d Robotiq3fHandMotionState::PalmJointPositionGraspMode(
   }
   return palm_position;
 }
+*/
 
 }  // namespace robotiq_3f
 }  // namespace examples

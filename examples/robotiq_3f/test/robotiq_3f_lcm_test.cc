@@ -33,7 +33,7 @@ GTEST_TEST(Robotiq3fLcmTest, Robotiq3fCommandReceiver) {
       tol, MatrixCompareType::absolute));
 
   Eigen::VectorXd position(kRobotiq3fNumJoints);
-  position << 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.1, 0.1;
+  position << 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9;
   dut.set_initial_position(context.get(), position);
   dut.CalcOutput(*context, output.get());
   EXPECT_TRUE(CompareMatrices(
@@ -46,8 +46,7 @@ GTEST_TEST(Robotiq3fLcmTest, Robotiq3fCommandReceiver) {
       tol, MatrixCompareType::absolute));
 
   Eigen::VectorXd delta(kRobotiq3fNumJoints);
-  delta << 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009,
-           0.010, 0.011;
+  delta << 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009;
 
   lcmt_robotiq_3f_command command{};
   command.num_joints = kRobotiq3fNumJoints;
@@ -87,7 +86,7 @@ GTEST_TEST(Robotiq3fLcmTest, Robotiq3fStatusSenderTest) {
       dut.AllocateOutput();
 
   Eigen::VectorXd position(kRobotiq3fNumJoints);
-  position << 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.1, 0.1;
+  position << 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9;
 
   Eigen::VectorXd command = Eigen::VectorXd::Zero(kRobotiq3fNumJoints * 2);
   command.head(kRobotiq3fNumJoints) = position * 0.5;
@@ -96,11 +95,11 @@ GTEST_TEST(Robotiq3fLcmTest, Robotiq3fStatusSenderTest) {
   Eigen::VectorXd state = Eigen::VectorXd::Zero(kRobotiq3fNumJoints * 2);
   state.head(kRobotiq3fNumJoints) = position;
   state.tail(kRobotiq3fNumJoints) << 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2,
-                                   0.1, -0.04, -0.04;
+                                   0.1;
   dut.get_state_input_port().FixValue(context.get(), state);
 
   Eigen::VectorXd torque = Eigen::VectorXd::Zero(kRobotiq3fNumJoints);
-  torque << 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1;;
+  torque << 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9;
   dut.get_commanded_torque_input_port().FixValue(context.get(), torque);
 
   dut.CalcOutput(*context, output.get());

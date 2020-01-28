@@ -68,7 +68,7 @@ void DoMain() {
 
   std::string hand_model_path = FindResourceOrThrow(
         "drake/manipulation/models/"
-        "robotiq_3f_description/urdf/robotiq-3f-gripper_articulated.urdf");
+        "robotiq_3f_description/urdf/robotiq-3f-gripper_articulated_basic.urdf");
 
   multibody::Parser parser(&plant);
   parser.AddModelFromFile(hand_model_path);
@@ -182,10 +182,12 @@ void DoMain() {
   const multibody::RevoluteJoint<double>& finger_2_joint_3 =
       plant.GetJointByName<multibody::RevoluteJoint>("finger_2_joint_3");
 
+  /*
   const multibody::RevoluteJoint<double>& palm_finger_1_joint =
       plant.GetJointByName<multibody::RevoluteJoint>("palm_finger_1_joint");
   const multibody::RevoluteJoint<double>& palm_finger_2_joint =
       plant.GetJointByName<multibody::RevoluteJoint>("palm_finger_2_joint");
+  */
 
   finger_middle_joint_1.set_angle(&plant_context,
     finger_middle_joint_1.position_lower_limit());
@@ -208,8 +210,10 @@ void DoMain() {
   finger_2_joint_3.set_angle(&plant_context,
     finger_2_joint_3.position_upper_limit());
 
+  /*
   palm_finger_1_joint.set_angle(&plant_context, 0.0);
   palm_finger_2_joint.set_angle(&plant_context, 0.0);
+  */
 
   // Set up simulator.
   systems::Simulator<double> simulator(*diagram, std::move(diagram_context));

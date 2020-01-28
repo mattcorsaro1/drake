@@ -48,7 +48,7 @@ class PositionCommander {
 
     // Open hand in basic mode
     int grasp_mode_index = 0;
-    target_joint_position = hand_state_.OpenJointPosition(grasp_mode_index);
+    target_joint_position = hand_state_.OpenJointPosition();
     MovetoPositionUntilStuck(target_joint_position);
 
     // Close hand in basic mode

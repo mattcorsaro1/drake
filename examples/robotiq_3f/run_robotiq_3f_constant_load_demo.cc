@@ -89,8 +89,8 @@ void DoMain() {
   // Now the model is complete.
   plant.Finalize();
 
-  DRAKE_DEMAND(plant.num_actuators() == 11);
-  DRAKE_DEMAND(plant.num_actuated_dofs() == 11);
+  DRAKE_DEMAND(plant.num_actuators() == 9);
+  DRAKE_DEMAND(plant.num_actuated_dofs() == 9);
 
   // constant force input
   VectorX<double> constant_load_value = VectorX<double>::Ones(

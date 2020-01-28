@@ -15,7 +15,7 @@ namespace drake {
 namespace examples {
 namespace robotiq_3f {
 
-constexpr int kRobotiq3fNumJoints = 11;
+constexpr int kRobotiq3fNumJoints = 9;
 
 /// Set the feedback gains for the simulated position control
 void SetPositionControlledGains(Eigen::VectorXd* Kp, Eigen::VectorXd* Ki,
@@ -66,7 +66,7 @@ class Robotiq3fHandMotionState {
   /// to set the hand to - [basic, wide, pinch]
 
   Eigen::VectorXd GraspJointPosition(int grasp_mode_index) const;
-  Eigen::VectorXd OpenJointPosition(int grasp_mode_index) const;
+  Eigen::VectorXd OpenJointPosition() const;
 
   /// Helper function that returns two joint positions corresponding to
   /// the two palm joints. These values affect the grasp mode.
@@ -86,6 +86,9 @@ class Robotiq3fHandMotionState {
  private:
   int robotiq_3f_num_joints_{kRobotiq3fNumJoints};
   int finger_num_{0};
+
+  bool underactuated_{false};
+  bool palm_joints_actuated{false};
 
   Eigen::Array<bool, Eigen::Dynamic, 1> is_joint_stuck_;
   Eigen::Array<bool, Eigen::Dynamic, 1> is_finger_stuck_;
