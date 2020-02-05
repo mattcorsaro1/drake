@@ -32,7 +32,6 @@ drake_cc_package_library(
         ":dummy_value",
         ":essential",
         ":extract_double",
-        ":filesystem",
         ":find_resource",
         ":find_runfiles",
         ":hash",
@@ -75,9 +74,7 @@ drake_cc_library(
         "drake_copyable.h",
         "drake_deprecated.h",
         "drake_nodiscard.h",
-        "drake_optional.h",
         "drake_throw.h",
-        "drake_variant.h",
         "eigen_stl_types.h",
         "eigen_types.h",
         "never_destroyed.h",
@@ -313,15 +310,21 @@ drake_cc_library(
     visibility = ["//tools/install/libdrake:__pkg__"],
 )
 
+# The drake::filesystem support is intended ONLY for use within Drake's *.cc
+# files -- it is not a public dependency of Drake.  As such, we compile it with
+# hidden visibility, exclude its header file from the install, and exclude it
+# from the //common:common package_library shortcut.
 drake_cc_library(
     name = "filesystem",
     srcs = ["filesystem.cc"],
     hdrs = ["filesystem.h"],
-    copts = [
-        # The drake::filesystem support is intended ONLY for use within Drake's
-        # *.cc files -- it is not a public dependency of Drake.
-        "-fvisibility=hidden",
+    copts = ["-fvisibility=hidden"],
+    install_hdrs_exclude = ["filesystem.h"],
+    tags = [
+        "exclude_from_libdrake",
+        "exclude_from_package",
     ],
+    visibility = ["//:__subpackages__"],
     deps = [
         "@ghc_filesystem",
     ],
@@ -826,32 +829,10 @@ drake_cc_googletest(
 )
 
 drake_cc_googletest(
-    name = "drake_optional_test",
-    copts = [
-        "-Wno-cpp",
-        "-Wno-deprecated-declarations",
-    ],
-    deps = [
-        ":essential",
-    ],
-)
-
-drake_cc_googletest(
     name = "drake_throw_test",
     deps = [
         ":essential",
         "//common/test_utilities:expect_no_throw",
-    ],
-)
-
-drake_cc_googletest(
-    name = "drake_variant_test",
-    copts = [
-        "-Wno-cpp",
-        "-Wno-deprecated-declarations",
-    ],
-    deps = [
-        ":essential",
     ],
 )
 

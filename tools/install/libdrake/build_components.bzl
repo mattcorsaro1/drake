@@ -10,11 +10,7 @@
 # edits, then `git status` will show this file as modified; in that case, you
 # should commit the changes made by the refresh script.
 LIBDRAKE_COMPONENTS = [
-    "//attic/manipulation/dev:remote_tree_viewer_wrapper",  # unpackaged
     "//attic/manipulation/planner",
-    "//attic/manipulation/scene_generation:random_clutter_generator",  # unpackaged  # noqa
-    "//attic/manipulation/scene_generation:simulate_plant_to_rest",  # unpackaged  # noqa
-    "//attic/manipulation/sensors",
     "//attic/manipulation/util",
     "//attic/multibody",
     "//attic/multibody/collision",
@@ -30,10 +26,8 @@ LIBDRAKE_COMPONENTS = [
     "//attic/multibody/rigid_body_plant:rigid_body_plant",  # unpackaged
     "//attic/multibody/rigid_body_plant:rigid_body_plant_bridge",  # unpackaged
     "//attic/multibody/shapes",
-    "//attic/perception",
     "//attic/systems/controllers",
     "//attic/systems/rendering",
-    "//attic/systems/robotInterfaces",
     "//attic/systems/sensors",
     "//attic/systems/trajectory_optimization",
     "//attic/util",
