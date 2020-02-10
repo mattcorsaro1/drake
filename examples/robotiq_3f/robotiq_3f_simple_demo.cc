@@ -73,7 +73,11 @@ void DoMain() {
   multibody::Parser parser(&plant);
   parser.AddModelFromFile(hand_model_path);
 
+  // TODO(mcorsaro): command line arg for this
+  // facing up
   RigidTransformd hand_rigid_tf(RollPitchYawd(M_PI / 2, 0, 0),
+  // facing side
+  //RigidTransformd hand_rigid_tf(RollPitchYawd(0, M_PI / 2, 0),
                                 Eigen::Vector3d(0, 0, 0));
 
   // Weld the hand to the world frame
