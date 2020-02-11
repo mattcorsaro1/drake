@@ -349,6 +349,9 @@ geometry::SourceId MultibodyPlant<T>::RegisterAsSourceForSceneGraph(
   body_index_to_frame_id_[world_index()] = world_frame_id;
   frame_id_to_body_index_[world_frame_id] = world_index();
   DeclareSceneGraphPorts();
+  // In case any bodies were added before registering scene graph, make sure the
+  // bodies get their corresponding geometry frame ids.
+  RegisterGeometryFramesForAllBodies();
   return source_id_.value();
 }
 
@@ -515,18 +518,7 @@ geometry::GeometryId MultibodyPlant<T>::RegisterGeometry(
     const std::string& name) {
   DRAKE_ASSERT(!is_finalized());
   DRAKE_ASSERT(geometry_source_is_registered());
-  // If not already done, register a frame for this body.
-  if (!body_has_registered_frame(body)) {
-    FrameId frame_id = member_scene_graph().RegisterFrame(
-        source_id_.value(),
-        GeometryFrame(
-            GetScopedName(*this, body.model_instance(), body.name()),
-            /* TODO(@SeanCurtis-TRI): Add test coverage for this
-             * model-instance support as requested in #9390. */
-            body.model_instance()));
-    body_index_to_frame_id_[body.index()] = frame_id;
-    frame_id_to_body_index_[frame_id] = body.index();
-  }
+  DRAKE_ASSERT(body_has_registered_frame(body));
 
   // Register geometry in the body frame.
   std::unique_ptr<geometry::GeometryInstance> geometry_instance =
@@ -545,11 +537,22 @@ void MultibodyPlant<T>::RegisterGeometryFramesForAllBodies() {
   // If not, create and attach one.
   for (BodyIndex body_index(0); body_index < num_bodies(); ++body_index) {
     const auto& body = get_body(body_index);
+    RegisterRigidBodyWithSceneGraph(body);
+  }
+}
+
+template <typename T>
+void MultibodyPlant<T>::RegisterRigidBodyWithSceneGraph(
+    const Body<T>& body) {
+  if (geometry_source_is_registered()) {
+    // If not already done, register a frame for this body.
     if (!body_has_registered_frame(body)) {
       FrameId frame_id = member_scene_graph().RegisterFrame(
           source_id_.value(),
           GeometryFrame(
               GetScopedName(*this, body.model_instance(), body.name()),
+              /* TODO(@SeanCurtis-TRI): Add test coverage for this
+               * model-instance support as requested in #9390. */
               body.model_instance()));
       body_index_to_frame_id_[body.index()] = frame_id;
       frame_id_to_body_index_[frame_id] = body.index();
@@ -627,7 +630,6 @@ void MultibodyPlant<T>::Finalize() {
   // After finalizing the base class, tree is read-only.
   internal::MultibodyTreeSystem<T>::Finalize();
   if (geometry_source_is_registered()) {
-    RegisterGeometryFramesForAllBodies();
     FilterAdjacentBodies();
     ExcludeCollisionsWithVisualGeometry();
   }
@@ -2801,8 +2803,8 @@ void MultibodyPlant<T>::CalcReactionForces(
 
       // Now we need to shift the application point from Jp to Jc.
       // First we need to find the position vector p_JpJc_W.
-      const RigidTransform<T> X_WJp = frame_Jp.CalcPoseInWorld(context);
-      const RotationMatrix<T>& R_WJp = X_WJp.rotation();
+      const RotationMatrix<T> R_WJp =
+          frame_Jp.CalcRotationMatrixInWorld(context);
       const RigidTransform<T> X_JpJc = frame_Jc.CalcPose(context, frame_Jp);
       const Vector3<T> p_JpJc_Jp = X_JpJc.translation();
       const Vector3<T> p_JpJc_W = R_WJp * p_JpJc_Jp;
@@ -2812,8 +2814,8 @@ void MultibodyPlant<T>::CalcReactionForces(
     }
 
     // Re-express in the joint's child frame Jc.
-    const RigidTransform<T> X_WJc = frame_Jc.CalcPoseInWorld(context);
-    const RotationMatrix<T> R_JcW = X_WJc.rotation().transpose();
+    const RotationMatrix<T> R_WJc = frame_Jc.CalcRotationMatrixInWorld(context);
+    const RotationMatrix<T> R_JcW = R_WJc.inverse();
     F_CJc_Jc_array->at(joint_index) = R_JcW * F_CJc_W;
   }
 }
