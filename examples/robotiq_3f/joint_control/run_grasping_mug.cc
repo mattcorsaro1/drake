@@ -46,17 +46,21 @@ class PositionCommander {
     Eigen::VectorXd target_joint_position(kRobotiq3fNumJoints);
     target_joint_position.setZero();
 
+    std::cout << "Initial LCM State:" << std::endl;
+    printLCMState();
+
     // Open hand in basic mode
     int grasp_mode_index = 0;
     target_joint_position = hand_state_.OpenJointPosition();
     MovetoPositionUntilStuck(target_joint_position);
+    std::cout << "Hand is open." << std::endl;
 
     // Close hand in basic mode
     target_joint_position = hand_state_.GraspJointPosition(grasp_mode_index);
     MovetoPositionUntilStuck(target_joint_position);
-    std::cout << "Hand is closed. \n";
-    while (0 == lcm_.handleTimeout(10)) {
-    }
+    std::cout << "Hand is closed." << std::endl;
+
+    printLCMState();
     Eigen::VectorXd current_joint_position = getJointValuesOnceStatic();
     std::cout << "Current joint position:" << current_joint_position << std::endl;
 
@@ -128,33 +132,30 @@ class PositionCommander {
     }
   }
 
-  // Returns joint values once each joint's velocity is below the given treshold
-  Eigen::VectorXd getJointValuesOnceStatic(double vel_min_thresh=0.0001)
-  {
-    bool joints_moving = true;
-    while(joints_moving) {
-      joints_moving = false;
-      for (std::vector<double>::iterator it =
-        robotiq_3f_status_.joint_velocity_estimated.begin();
-        it != robotiq_3f_status_.joint_velocity_estimated.end(); ++it) {
-        if (*it > vel_min_thresh) {
-          joints_moving = true;
-        }
-        std::cout << "VEL: " <<
-          robotiq_3f_status_.joint_velocity_estimated[0] << ' ' <<
-          robotiq_3f_status_.joint_velocity_estimated[1] << ' ' <<
-          robotiq_3f_status_.joint_velocity_estimated[2] << ' ' <<
-          robotiq_3f_status_.joint_velocity_estimated[3] << ' ' <<
-          robotiq_3f_status_.joint_velocity_estimated[4] << ' ' <<
-          robotiq_3f_status_.joint_velocity_estimated[5] << ' ' <<
-          robotiq_3f_status_.joint_velocity_estimated[6] << ' ' <<
-          robotiq_3f_status_.joint_velocity_estimated[7] << ' ' <<
-          robotiq_3f_status_.joint_velocity_estimated[8] << std::endl;
-      }
-    }
-
+  // Returns last measured joint values
+  Eigen::VectorXd getJointValuesOnceStatic() {
     return Eigen::Map<Eigen::VectorXd>(
         &(robotiq_3f_status_.joint_position_measured[0]), kRobotiq3fNumJoints);
+  }
+
+  void printVector(const std::vector<double>& vector_to_print) {
+    std::cout << "(size " << vector_to_print.size() << "): ";
+    for (std::vector<double>::const_iterator it = vector_to_print.begin();
+      it != vector_to_print.end(); ++it) {
+      std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+  }
+  void printLCMState() {
+    std::cout << "LCMState "  << robotiq_3f_status_.utime << std::endl;
+    std::cout << "joint_position_measured ";
+    printVector(robotiq_3f_status_.joint_position_measured);
+    std::cout << "joint_position_commanded ";
+    printVector(robotiq_3f_status_.joint_position_commanded);
+    std::cout << "joint_torque_commanded ";
+    printVector(robotiq_3f_status_.joint_torque_commanded);
+    std::cout << "joint_velocity_estimated ";
+    printVector(robotiq_3f_status_.joint_velocity_estimated);
   }
 
   void HandleStatus(const ::lcm::ReceiveBuffer*, const std::string&,
