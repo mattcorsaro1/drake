@@ -6,16 +6,29 @@ namespace drake {
 namespace examples {
 namespace robotiq_3f {
 
-const double Robotiq3fHandMotionState::velocity_thresh_ = 7.0;
+const double Robotiq3fHandMotionState::velocity_thresh_ = 0.01;
 
 using drake::multibody::JointIndex;
 using drake::multibody::MultibodyPlant;
 
 void SetPositionControlledGains(Eigen::VectorXd* Kp, Eigen::VectorXd* Ki,
                                 Eigen::VectorXd* Kd) {
-  *Kp = Eigen::VectorXd::Ones(kRobotiq3fNumJoints) * 0.5;
-  *Kd = Eigen::VectorXd::Constant(Kp->size(), 5e-2);
-  *Ki = Eigen::VectorXd::Zero(kRobotiq3fNumJoints);
+  *Kp = Eigen::VectorXd::Ones(kRobotiq3fNumJoints) * 5e-1;
+  *Kd = Eigen::VectorXd::Constant(Kp->size(), 4e-2);
+  *Ki = Eigen::VectorXd::Constant(Kp->size(), 0);
+
+  // increase gains for joint 1
+  (*Kp)[0] *= 1.2;
+  (*Kp)[3] *= 1.2;
+  (*Kp)[6] *= 1.2;
+
+  (*Kd)[0] *= 1.2;
+  (*Kd)[3] *= 1.2;
+  (*Kd)[6] *= 1.2;
+
+  (*Ki)[0] *= 1.2;
+  (*Ki)[3] *= 1.2;
+  (*Ki)[6] *= 1.2;
 }
 
 std::vector<std::string> GetPreferredJointOrdering() {
@@ -79,22 +92,11 @@ void Robotiq3fHandMotionState::Update(
 
   is_joint_stuck_ = joint_velocity.abs() < velocity_thresh_;
 
-  // Detect whether the joint is moving in the opposite direction of the
-  // command. If yes, it is most likely the joint is stuck.
-  Eigen::Array<bool, Eigen::Dynamic, 1> motor_reverse =
-      (joint_velocity * torque_command) < -0.001;
-  is_joint_stuck_ += motor_reverse;
-
   is_finger_stuck_.setZero();
   if (is_joint_stuck_.segment<3>(0).all()) is_finger_stuck_(0) = true;
   if (is_joint_stuck_.segment<3>(3).all()) is_finger_stuck_(1) = true;
   if (is_joint_stuck_.segment<3>(6).all()) is_finger_stuck_(2) = true;
   //if (is_joint_stuck_.segment<2>(9).all()) is_finger_stuck_(3) = true;
-
-  if (motor_reverse.segment<3>(0).any()) is_finger_stuck_(0) = true;
-  if (motor_reverse.segment<3>(3).any()) is_finger_stuck_(1) = true;
-  if (motor_reverse.segment<3>(6).any()) is_finger_stuck_(2) = true;
-  //if (motor_reverse.segment<2>(9).any()) is_finger_stuck_(3) = true;
 }
 
 Eigen::VectorXd Robotiq3fHandMotionState::GraspJointPosition(
