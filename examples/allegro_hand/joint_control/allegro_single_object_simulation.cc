@@ -23,6 +23,7 @@
 #include "drake/multibody/plant/multibody_plant.h"
 #include "drake/multibody/tree/uniform_gravity_field_element.h"
 #include "drake/multibody/tree/weld_joint.h"
+#include "drake/multibody/tree/revolute_joint.h"
 #include "drake/systems/analysis/simulator.h"
 #include "drake/systems/analysis/simulator_gflags.h"
 #include "drake/systems/controllers/pid_controller.h"
@@ -53,6 +54,49 @@ DEFINE_double(
     "The fixed-time step period (in seconds) of discrete updates for the "
     "multibody plant modeled as a discrete system. Strictly positive. "
     "Set to zero for a continuous plant model.");
+
+// Adapted from examples/planar_gripper/planar_gripper_simulation.cc's
+// ForceSensorEvaluator
+class ContactEvaluator : public systems::LeafSystem<double> {
+ public:
+  DRAKE_NO_COPY_NO_MOVE_NO_ASSIGN(ContactEvaluator);
+  explicit ContactEvaluator(const MultibodyPlant<double>& plant) {
+
+    int num_joints = 16;
+    for (int i = 0; i < num_joints; i++) {
+      std::string joint_name =
+          "joint_" + std::to_string(i);
+      joint_indices_.push_back(
+          plant.GetJointByName<multibody::RevoluteJoint>(joint_name).index());
+    }
+
+    this->DeclareAbstractInputPort(
+            "contact_results_in",
+            Value<multibody::ContactResults<double> >()).get_index();
+    this->DeclareVectorOutputPort("contact_status_out",
+                              systems::BasicVector<double>(num_joints),
+                              &ContactEvaluator::CalcOutput).get_index();
+  }
+
+  void CalcOutput(const drake::systems::Context<double>& context,
+                 drake::systems::BasicVector<double>* output) const {
+    const multibody::ContactResults<double>& contact_results =
+        this->get_input_port(0)
+            .Eval<multibody::ContactResults<double> >(context);
+    auto output_value = output->get_mutable_value();
+    std::cout << "Detected " << contact_results.num_point_pair_contacts() <<
+        " contact points." << std::endl;
+
+    for (uint joint_index=0;
+         joint_index<joint_indices_.size();
+         joint_index++) {
+      output_value[joint_index] = false;
+    }
+  }
+
+ private:
+  std::vector<multibody::JointIndex> joint_indices_;
+};
 
 void DoMain() {
   DRAKE_DEMAND(FLAGS_simulation_time > 0);
@@ -163,6 +207,10 @@ void DoMain() {
                   status_sender.get_commanded_torque_input_port());
   builder.Connect(status_sender.get_output_port(0),
                   hand_status_pub.get_input_port());
+
+  auto contact_evaluator = builder.AddSystem<ContactEvaluator>(plant);
+  builder.Connect(plant.get_contact_results_output_port(),
+                  contact_evaluator->get_input_port(0));
 
   // Now the model is complete.
   std::unique_ptr<systems::Diagram<double>> diagram = builder.Build();
