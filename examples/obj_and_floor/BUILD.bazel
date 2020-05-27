@@ -1,0 +1,35 @@
+# -*- python -*-
+
+load(
+    "@drake//tools/skylark:drake_cc.bzl",
+    "drake_cc_binary",
+    "drake_cc_googletest",
+    "drake_cc_library",
+)
+load("//tools/lint:lint.bzl", "add_lint_tests")
+
+package(default_visibility = ["//visibility:public"])
+
+drake_cc_binary(
+    name = "simulate_obj_and_floor",
+    srcs = ["simulate_obj_and_floor.cc"],
+    data = [
+        ":models",
+    ],
+    deps = [
+        "//common:add_text_logging_gflags",
+        "//common:find_resource",
+        "//geometry:geometry_visualization",
+        "//lcm",
+        "//math",
+        "//multibody/parsing",
+        "//multibody/plant",
+        "//multibody/plant:contact_results_to_lcm",
+        "//systems/analysis",
+        "//systems/primitives",
+        "//systems/rendering:pose_bundle_to_draw_message",
+        "@gflags",
+    ],
+)
+
+add_lint_tests()
