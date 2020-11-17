@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<robot name="slider">
+  <link name="slider_fixed_dummy_link"/>
+
+  <link name="slider_link">
+    <inertial>
+      <!-- Include small mass and cuboid inertia with s=0.01-->
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.1"/>
+      <!-- https://en.wikipedia.org/wiki/List_of_moments_of_inertia#List_of_3D_inertia_tensors -->
+      <!-- m/12*(s1^2 + s2^2)-->
+      <inertia ixx="1.66667e-6" ixy="0.0" ixz="0.0" iyy="1.66667e-6" iyz="0.0" izz="1.66667e-6"/>
+    </inertial>
+  </link>
+
+  <joint name="slider_joint" type="prismatic">
+    <parent link="slider_fixed_dummy_link"/>
+    <child link="slider_link"/>
+    <origin xyz="0.0 0.0 0.0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0" upper="1.0"/>
+  </joint>
+  <transmission name="slider_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="slider_joint"/>
+    <actuator name="slider_actuator"/>
+  </transmission>
+
+</robot>

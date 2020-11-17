@@ -1,0 +1,48 @@
+<sdf version='1.6'>
+  <model name='box'>
+    <link name='main_body'>
+      <pose frame=''>0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>0.2</mass>
+        <!-- is3s3 = m/12*(s1^2 + s2^2)-->
+        <!-- https://en.wikipedia.org/wiki/List_of_moments_of_inertia#List_of_3D_inertia_tensors -->
+        <pose frame=''>0 0 0.07 0 0 0</pose>
+        <inertia>
+          <ixx>6.5333e-4</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.5333e-4</iyy>
+          <iyz>0</iyz>
+          <izz>3.5333e-4</izz>
+        </inertia>
+      </inertial>
+
+      <collision name='main_body_collision'>
+        <pose frame=''>0 0 0.07 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.04 0.14 0.14</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.9</mu>
+              <mu2>0.5</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+
+      <visual name='main_body_visual'>
+        <pose frame=''>0 0 0.07 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.04 0.14 0.14</size>
+          </box>
+        </geometry>
+      </visual>
+
+    </link>
+  </model>
+</sdf>

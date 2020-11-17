@@ -302,6 +302,32 @@ drake_lcm_cc_library(
 )
 
 drake_lcm_cc_library(
+    name = "obj_status",
+    lcm_package = "drake",
+    lcm_srcs = [
+        "lcmt_obj_status.lcm",
+    ],
+)
+
+drake_lcm_cc_library(
+    name = "slider",
+    lcm_package = "drake",
+    lcm_srcs = [
+        "lcmt_slider_command.lcm",
+        "lcmt_slider_status.lcm",
+    ],
+)
+
+drake_lcm_cc_library(
+    name = "robotiq_3f",
+    lcm_package = "drake",
+    lcm_srcs = [
+        "lcmt_robotiq_3f_binary_command.lcm",
+        "lcmt_robotiq_3f_status.lcm",
+    ],
+)
+
+drake_lcm_cc_library(
     name = "schunk",
     lcm_package = "drake",
     lcm_srcs = [

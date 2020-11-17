@@ -1,0 +1,73 @@
+# -*- python -*-
+
+load(
+    "@drake//tools/skylark:drake_cc.bzl",
+    "drake_cc_binary",
+    "drake_cc_googletest",
+    "drake_cc_library",
+)
+load("//tools/lint:lint.bzl", "add_lint_tests")
+
+package(
+    default_visibility = [":__subpackages__"],
+)
+
+drake_cc_library(
+    name = "robotiq_3f_common",
+    srcs = ["robotiq_3f_common.cc"],
+    hdrs = ["robotiq_3f_common.h"],
+    deps = [
+        "//lcmtypes:robotiq_3f",
+        "//multibody/plant",
+    ],
+)
+
+drake_cc_library(
+    name = "robotiq_3f_lcm",
+    srcs = ["robotiq_3f_lcm.cc"],
+    hdrs = ["robotiq_3f_lcm.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":robotiq_3f_common",
+        "//lcmtypes:robotiq_3f",
+        "//systems/framework:leaf_system",
+    ],
+)
+
+drake_cc_library(
+    name = "obj_status_lcm",
+    srcs = ["obj_status_lcm.cc"],
+    hdrs = ["obj_status_lcm.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//lcmtypes:obj_status",
+        "//systems/framework:leaf_system",
+    ],
+)
+
+drake_cc_library(
+    name = "slider_lcm",
+    srcs = ["slider_lcm.cc"],
+    hdrs = ["slider_lcm.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":robotiq_3f_common",
+        "//lcmtypes:slider",
+        "//systems/framework:leaf_system",
+    ],
+)
+
+# === test/ ===
+
+#drake_cc_googletest(
+#    name = "robotiq_3f_lcm_test",
+#    deps = [
+#        ":robotiq_3f_common",
+#        ":robotiq_3f_lcm",
+#        "//attic/manipulation/util:world_sim_tree_builder",
+#        "//common/test_utilities:eigen_matrix_compare",
+#        "//systems/framework",
+#    ],
+#)
+
+#add_lint_tests()

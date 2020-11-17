@@ -1,0 +1,5 @@
+This folder contains a model of the Robotiq 3-finger articulated gripper. The files were
+originally taken from https://github.com/ros-industrial/robotiq/, SHA 4e3196c. The
+original license for these files is BSD and is given in the link below.
+
+https://github.com/ros-industrial/robotiq/blob/4e3196c1c6a83f54acfa3dd8cf02b575ebba3e53/LICENSE

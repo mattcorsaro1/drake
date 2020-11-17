@@ -1,0 +1,11 @@
+package drake;
+
+// Status containing an object's pose.
+struct lcmt_obj_status {
+  // The timestamp in microseconds.
+  int64_t utime;
+
+  // Full state contains position and velocity (13 values)
+  int32_t num_state_vals;
+  double obj_state[num_state_vals];
+}

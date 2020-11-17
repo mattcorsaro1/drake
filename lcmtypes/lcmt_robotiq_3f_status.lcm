@@ -1,0 +1,17 @@
+package drake;
+
+struct lcmt_robotiq_3f_status {
+  // The timestamp in microseconds.
+  int64_t utime;
+
+  int32_t num_joints;
+  int32_t num_links;
+
+  double joint_position_measured[num_joints];
+  double joint_velocity_estimated[num_joints];
+  double joint_position_commanded[num_joints];
+  double joint_torque_commanded[num_joints];
+
+  int32_t child_link_in_contact[num_links];
+  int32_t contact_with_environment;
+}

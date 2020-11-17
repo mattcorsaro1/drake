@@ -1,0 +1,11 @@
+package drake;
+
+// Commands a single prismatic joint state for an articulated floor.
+struct lcmt_slider_command {
+  // The timestamp in microseconds.
+  int64_t utime;
+
+  // The reference joint positions. 
+  int32_t num_joints;
+  double joint_position[num_joints];
+}

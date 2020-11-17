@@ -1,0 +1,64 @@
+# -*- python -*-
+
+load(
+    "@drake//tools/skylark:drake_cc.bzl",
+    "drake_cc_binary",
+    "drake_cc_googletest",
+    "drake_cc_library",
+)
+load("//tools/lint:lint.bzl", "add_lint_tests")
+
+package(default_visibility = ["//visibility:public"])
+
+drake_cc_binary(
+    name = "robotiq_3f_single_object_simulation",
+    srcs = ["robotiq_3f_single_object_simulation.cc"],
+    data = [
+        ":cylinder.sdf",
+        ":box.sdf",
+        ":floor.urdf",
+        ":slider.urdf",
+        "//manipulation/models/robotiq_3f_description:models",
+    ],
+    deps = [
+        "//common:add_text_logging_gflags",
+        "//common:find_resource",
+        "//examples/robotiq_3f:slider_lcm",
+        "//examples/robotiq_3f:obj_status_lcm",
+        "//examples/robotiq_3f:robotiq_3f_common",
+        "//examples/robotiq_3f:robotiq_3f_lcm",
+        "//geometry:geometry_visualization",
+        "//lcm",
+        "//lcmtypes:slider",
+        "//lcmtypes:obj_status",
+        "//lcmtypes:robotiq_3f",
+        "//math",
+        "//multibody/parsing",
+        "//multibody/plant",
+        "//multibody/plant:contact_results_to_lcm",
+        "//systems/analysis",
+        "//systems/controllers:pid_controller",
+        "//systems/lcm:lcm_pubsub_system",
+        "//systems/primitives",
+        "//systems/rendering:pose_bundle_to_draw_message",
+        "@gflags",
+    ],
+)
+
+drake_cc_binary(
+    name = "grasp_commander",
+    srcs = ["grasp_commander.cc"],
+    deps = [
+        "//examples/robotiq_3f:slider_lcm",
+        "//examples/robotiq_3f:obj_status_lcm",
+        "//examples/robotiq_3f:robotiq_3f_common",
+        "//examples/robotiq_3f:robotiq_3f_lcm",
+        "//lcm",
+        "//lcmtypes:slider",
+        "//lcmtypes:obj_status",
+        "//lcmtypes:robotiq_3f",
+        "@gflags",
+    ],
+)
+
+add_lint_tests()

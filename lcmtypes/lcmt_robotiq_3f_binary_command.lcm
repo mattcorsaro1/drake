@@ -1,0 +1,9 @@
+package drake;
+
+// Commands a single set of joint states for the hand.
+struct lcmt_robotiq_3f_binary_command {
+  // The timestamp in microseconds.
+  int64_t utime;
+
+  boolean close_hand;
+}
