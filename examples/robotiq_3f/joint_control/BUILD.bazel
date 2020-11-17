@@ -27,7 +27,7 @@ drake_cc_binary(
         "//examples/robotiq_3f:obj_status_lcm",
         "//examples/robotiq_3f:robotiq_3f_common",
         "//examples/robotiq_3f:robotiq_3f_lcm",
-        "//geometry:geometry_visualization",
+        "//geometry:drake_visualizer",
         "//lcm",
         "//lcmtypes:slider",
         "//lcmtypes:obj_status",

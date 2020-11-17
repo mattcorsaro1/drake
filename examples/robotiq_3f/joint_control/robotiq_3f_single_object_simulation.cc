@@ -10,7 +10,7 @@
 #include "drake/examples/robotiq_3f/robotiq_3f_common.h"
 #include "drake/examples/robotiq_3f/robotiq_3f_lcm.h"
 #include "drake/examples/robotiq_3f/slider_lcm.h"
-#include "drake/geometry/geometry_visualization.h"
+#include "drake/geometry/drake_visualizer.h"
 #include "drake/lcmt_obj_status.hpp"
 #include "drake/lcmt_robotiq_3f_binary_command.hpp"
 #include "drake/lcmt_robotiq_3f_status.hpp"
@@ -256,7 +256,7 @@ void DoMain() {
   }
 
   // Visualization
-  geometry::ConnectDrakeVisualizer(&builder, scene_graph);
+  geometry::DrakeVisualizer::AddToBuilder(&builder, scene_graph);
   DRAKE_DEMAND(!!plant.get_source_id());
 
   // Publish contact results for visualization.
@@ -441,7 +441,7 @@ void DoMain() {
 
   // Now the model is complete.
   std::unique_ptr<systems::Diagram<double>> diagram = builder.Build();
-  geometry::DispatchLoadMessage(scene_graph, lcm);
+
   // Create a context for this system:
   std::unique_ptr<systems::Context<double>> diagram_context =
       diagram->CreateDefaultContext();
